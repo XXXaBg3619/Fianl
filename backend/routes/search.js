@@ -16,7 +16,7 @@ router.get("/momo", (req, res) => {
     const prds = getPrdsList(prdName, "momo");
     const idName = `${prdName}-${20*(page-1)+1}`;
     const exist = prds.findIndex((obj) => obj["id"] === idName);
-    // console.log(`${page}, ${exist}`)
+    console.log(`${page}, ${exist}`)
     if (exist !== -1) {
         console.log("Data has been stored")
         savePrdsList(prdName, "momo", prds);

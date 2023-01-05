@@ -65,6 +65,7 @@ const Get = async (loc, prdName, page) => {
 // };
 
 const search = (prdName, page, type) => {
+    console.log("search")
     // console.log(prdsList, prdName, page);
     try {
         return Get(`/${type}`, prdName, page);
@@ -75,6 +76,7 @@ const search = (prdName, page, type) => {
 };
 
 const cleanData = () => {
+    console.log("cleanData")
     try {
         return Post(`/clean`);
     }
