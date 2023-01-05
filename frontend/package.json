@@ -16,7 +16,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "NODE_ENV=production babel-node src/api.js"
+    "deploy": "NODE_ENV=production babel-node src/axios.js"
   },
   "eslintConfig": {
     "extends": [
