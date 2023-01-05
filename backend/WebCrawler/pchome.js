@@ -14,8 +14,8 @@ async function PCHOME(name, page, callback) {
         if (productList.length === 0) {
             console.log("productList is empty");
         }
-        else
-            console.log(productList)
+        // else
+        //     console.log(productList)
 
         // if (productsList === undefined) {
         //     productsList = {};
