@@ -20,7 +20,7 @@ const Post = async (loc) => {
         return msg;
     }
     catch(error) {
-        console.log("error:", error);
+        console.log("Post error:", error);
         try {
             const { data: {msg} } = error.response;
             return msg;
@@ -40,7 +40,7 @@ const Get = async (loc, prdName, page) => {
     //   console.log(products);
       return products;
     } catch (error) {
-        console.log("error:", error);
+        console.log("Get error:", error);
         try {
             const { data: { msg } } = error.response;
             return msg;

@@ -12,6 +12,7 @@ const router = express.Router();
 // });
 
 router.get("/momo", (req, res) => {
+    console.log("start momo search")
     const { prdName, page } = req.query;
     const prds = getPrdsList(prdName, "momo");
     const idName = `${prdName}-${20*(page-1)+1}`;
@@ -85,6 +86,7 @@ router.get("/shopee", (req, res) => {
 });
 
 router.post("/clean", (_, res) => {
+    console.log("start clean")
     cleanPrdsList("all");
     res.status(200).send({ msg: "Data is clean" })
 });
