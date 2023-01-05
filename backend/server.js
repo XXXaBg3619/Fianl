@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import searchRoute from './routes/search';
+import path from "path";
 
 const app = express();
 
@@ -19,9 +20,7 @@ if (process.env.NODE_ENV === "production") {
       res.sendFile(path.join(__dirname, "../frontend", "build", "index.html"));
       console.log(req.body);
     });
-    app.use(express.json())
-    app.use(bodyParser.json());
-    app.use("/", routes);
+    app.use("/api/search", searchRoute);
 }
 if (process.env.NODE_ENV === "development") {
 	app.use(cors());
