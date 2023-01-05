@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const instance = axios.create ({ baseURL: "http://localhost:4000/api/search" });
+const API_ROOT =
+  process.env.NODE_ENV === "production"
+    ? "/api/search"
+    : "http://localhost:4000/api/search";
+
+const instance = axios.create ({ baseURL: API_ROOT });
 
 const noResponse = "Server not responding or not connected";
 
