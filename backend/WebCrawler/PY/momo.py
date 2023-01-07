@@ -1,7 +1,7 @@
 import requests, urllib, sys, json
 from bs4 import BeautifulSoup
 
-JSONFile = "../productsList.json"
+JSONFile = "WebCrawler/productsList.json"
 defaultPrdsList = { "momo": {}, "pchome": {}, "shopee": {} }
 
 
