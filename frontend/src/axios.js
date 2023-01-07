@@ -1,26 +1,19 @@
 import axios from 'axios';
 
-const API_ROOT =
-  process.env.NODE_ENV === "production"
-    ? "/api/search"
-    : "http://localhost:4000/api/search";
-
-const instance = axios.create ({ baseURL: API_ROOT });
+const instance = axios.create ({ baseURL: "/api/search" });
 
 const noResponse = "Server not responding or not connected";
 
-// let gameType = 0;
-// function setType(type) {
-//     gameType = type;
-// };
+const SearchType = {'default': '1', 'low-high': '2', 'high-low': '3'};
 
-const Post = async (loc) => {
+const Post = async (loc, platform) => {
     try {
-        const { data: {msg} } = await instance.post(loc);
+        const query = `platform=${platform}`;
+        const { data: {msg} } = await instance.post(`${loc}?${query}`);
         return msg;
     }
     catch(error) {
-        console.log("Post error:", error);
+        console.log("error:", error);
         try {
             const { data: {msg} } = error.response;
             return msg;
@@ -32,15 +25,15 @@ const Post = async (loc) => {
     }
 };
 
-const Get = async (loc, prdName, page) => {
+const Get = async (loc, prdName, page, searchType) => {
+    // console.log(`Get: ${loc}, ${prdName}, ${page}, ${searchType}`)
     try {
-      const query = `prdName=${prdName}&page=${page}`;
+      const query = `prdName=${prdName}&page=${page}&searchType=${searchType}`;
       const { data: { msg } } = await instance.get(`${loc}?${query}`);
       const products = JSON.parse(msg)
-    //   console.log(products);
       return products;
     } catch (error) {
-        console.log("Get error:", error);
+        console.log("error:", error);
         try {
             const { data: { msg } } = error.response;
             return msg;
@@ -50,52 +43,50 @@ const Get = async (loc, prdName, page) => {
         }
     }
 };
-  
 
-// const startGame = () => {
-//     if (gameType === 1) {
-//         Post("/start");
-//     }
-//     else if (gameType === 2) {
-//         Post("/startAB");
-//     }
-//     else {
-//         return noResponse;
-//     }
-// };
-
-const search = (prdName, page, type) => {
-    console.log("search")
-    // console.log(prdsList, prdName, page);
+const Gets = async (loc, prdName, page, type, searchType) => {
+    // console.log(`Gets: ${loc}, ${prdName}, ${page}, ${type}, ${searchType}`)
     try {
-        return Get(`/${type}`, prdName, page);
+      const query = `prdName=${prdName}&page=${page}&type=${type}&searchType=${searchType}`;
+      const { data: { msg } } = await instance.get(`${loc}?${query}`);
+      const products = JSON.parse(msg)
+      return products;
+    } catch (error) {
+        console.log("error:", error);
+        try {
+            const { data: { msg } } = error.response;
+            return msg;
+        } catch (err) {
+            console.log(err);
+            return noResponse;
+        }
+    }
+};
+
+
+
+const search = (prdName, page, type, searchType) => {
+    // console.log(`SEARCH: ${prdName}, ${page}, ${type}, ${searchType}`)
+    try {
+        if (type.length === 1)
+            return Get(`/${type[0]}`, prdName, page, SearchType[searchType]);
+        else
+            return Gets(`/${searchType}`, prdName, page, type, SearchType[searchType]);
     }
     catch {
         return noResponse;
     }
 };
 
-const cleanData = () => {
-    console.log("cleanData")
+const cleanData = (platform) => {
     try {
-        return Post(`/clean`);
+        return Post(`/clean`, platform);
     }
     catch {
         return noResponse;
     }
 }
 
-// const restart = () => {
-//     if (gameType === 1) {
-//         Post("/restart");
-//     }
-//     else if (gameType === 2) {
-//         Post("/restartAB");
-//     }
-//     else {
-//         return noResponse;
-//     }
-// };
 
 
 export { search, cleanData }

@@ -1,29 +1,44 @@
 import './App.css';
 import { search, cleanData } from './axios';
 import React, { useState, useEffect } from 'react';
+import logo from './logo.svg';
+import { Button, Select, Input } from 'antd';
 
 function App() {
   const [prdsList, setPrdsList] = useState([]);
   const [prdName, setPrdName] = useState("");
   const [page, setPage] = useState(1);
-  const [type, setType] = useState("momo");
+  const [type, setType] = useState(["momo"]);
   const [searchClicked, setSearchClicked] = useState(false);
-  let Name, Type;
+  const [searchtype, setSearchType] = useState("default");
+  const [loading, setLoading] = useState(false);
+  const [selectSearch, setSelectSearch] = useState(false);
+  // const [typeList, setTypeList] = useState([])
+  let Name, Type, SearchType;
 
-
-  const handleSearch = async (Name, Page, Type, click) => {
+  const handleSearch = async (Name, Page, Type, SearchType, click) => {
+    setLoading(true);
     if (Name !== undefined)
       setPrdName(Name);
     else 
       Name = prdName;
-    if (Type !== undefined)
+
+    if (Type !== undefined && Type !== type)
       setType(Type);
+    else {
+        Type = type;
+    }
+
+    if (SearchType !== undefined)
+      setSearchType(SearchType);
     else
-      Type = type;
+      SearchType = searchtype;
+    
     setPage(Page);
 
-    const prds = await search(Name, page, Type);
+    const prds = await search(Name, page, Type, SearchType);
     setPrdsList(prds);
+    setLoading(false);
     // console.log(prdsList); //check
     if (!searchClicked)
       setSearchClicked(click);
@@ -83,7 +98,7 @@ function App() {
                   <p className="info_name">{element.name}</p>
                   <div className='info_more'>
                     <p className="info_price">{element.price}</p>
-                    <a href={element.link}><button>點擊前往</button></a>
+                    <a href={element.link}><Button>點擊前往</Button></a>
                   </div>
                 </div>
               </div>
@@ -91,9 +106,9 @@ function App() {
           </div>
           {searchClicked && (
             <div className='buttonBelow'>
-              <button className="prev-button" onClick={handlePrevButtonClick}>prev page</button>
+              <Button className="prev-button" onClick={handlePrevButtonClick}>prev page</Button>
               {handlePageIndex()}
-              <button className="next-button" onClick={handleNextButtonClick}>next page</button>
+              <Button className="next-button" onClick={handleNextButtonClick}>next page</Button>
             </div>
           )}
         </div>
@@ -102,16 +117,118 @@ function App() {
     catch{
       return <p></p>
     }
-    // else 
-    //   return <div></div>
   }
 
-  useEffect(() => {
-    cleanData();
-  }, [type]);
+  const Loader = () => {
+    return (
+      <div className="loading">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>Please wait for a moment</p>
+      </div>
+    );
+  };
+
+  const handleSearchTypeButtonClick = (value) => {
+    SearchType = value;
+    if (Type !== undefined && Type !== type)
+      setType(Type);
+    else
+      Type = [type[0]]
+    if (SearchType !== undefined)
+      setSearchType(SearchType);
+    else
+      SearchType = searchtype;
+    if (SearchType !== "default")
+
+      setSelectSearch(true);
+    else
+      setSelectSearch(false)
+  }
+
+  const SglSelectType = () => {
+    if (Type !== undefined) {
+      return Type[0]
+    }
+    else {
+      return type[0]
+    }
+  }
+
+  const handleSglChange = (value) => {
+    if (value !== undefined)
+      Type = [value];
+      // console.log(`check: ${Type}`)
+  }
+
+  const SglSelectSearch = () => {
+    return (
+      <Select 
+        name="type" 
+        className="product-type" 
+        defaultValue={SglSelectType} 
+        onChange={handleSglChange} 
+        options={[
+          { value: 'momo', label: 'momo' },
+          { value: 'pchome', label: 'pchome' },
+          { value: 'shopee', label: 'shopee' }]} 
+        />
+    );
+  };
+
+  const MulSelectType = (value) => {
+    if (type.includes(value)) {
+      Type = type;
+      return true;
+    }
+    else {
+      return false
+    }
+  }
+
+  const MulSelectSearch = () => {
+    return (
+      <div className='select-search product-type'>
+        <div>
+          <input type="checkbox" id="momo" value="momo" defaultChecked={MulSelectType("momo")} onChange={handleCheckboxChange} />
+          <label htmlFor="momo">momo</label>
+        </div>
+        <div>
+          <input type="checkbox" id="pchome" value="pchome" defaultChecked={MulSelectType("pchome")} onChange={handleCheckboxChange} />
+          <label htmlFor="pchome">pchome</label>
+        </div>
+        <div>
+          <input type="checkbox" id="shopee" value="shopee" defaultChecked={MulSelectType("shopee")} onChange={handleCheckboxChange} />
+          <label htmlFor="shopee">shopee</label>
+        </div>
+      </div>
+    );
+  };
+
+  const handleCheckboxChange = (event) => {
+    const value = event.target.value;
+    console.log(Type)
+    if (Type === undefined)
+      Type = [];
+    console.log(Type)
+    const index = Type.indexOf(value);
+    if (index !== -1) {
+      Type.splice(index, 1);
+    } else {
+      Type.push(value);
+    }
+  }
+
+  const handleInputChange = (event) => {
+    Name = event.target.value;
+  }
+  
 
   useEffect(() => {
-    handleSearch(prdName, page, type);
+    cleanData("all");
+  }, [type, searchtype]);
+
+  useEffect(() => {
+    handleSearch(prdName, page, type, searchtype);
     UpdateProducts();
     window.scrollTo(0, 0); // scroll to the top of the page
   }, [page]);
@@ -119,16 +236,31 @@ function App() {
   return (
     <div className="App">
       <div className='App-header'>
-        <select name="type" className="product-type" onChange={event => {Type = event.target.value}}>
-          <option value="momo">momo</option>
-          <option value="pchome">pchome</option>
-          <option value="shopee">shopee</option>
-        </select>
-        <input type="text" className="search-input" value={Name} onChange={event => {Name = event.target.value}}></input>
-        <button className="search-button" onClick={() => handleSearch(Name, 1, Type, true)}>search</button>
-        <button className="prev-button" onClick={handlePrevButtonClick}>prev page</button>
-        <button className="next-button" onClick={handleNextButtonClick}>next page</button>
-        <UpdateProducts />
+        <Select
+          name="type" 
+          className="search-type" 
+          defaultValue="default"
+          onChange={handleSearchTypeButtonClick} 
+          options={[
+            { value: "default", label: "default" },
+            { value: "low-high", label: "low-high" },
+            { value: "high-low", label: "high-low" },
+          ]} />
+        {selectSearch?
+          <MulSelectSearch />:
+          <SglSelectSearch />
+        }
+        {/* <input type="text" className="search-input" value={Name} onChange={event => {Name = event.target.value}}></input> */}
+        <Input className="search-input" value={Name} onChange={handleInputChange} />
+        <Button className="search-button" onClick={() => handleSearch(Name, 1, Type, SearchType, true)}>search</Button>
+        <Button className="prev-button" onClick={handlePrevButtonClick}>prev page</Button>
+        <Button className="next-button" onClick={handleNextButtonClick}>next page</Button>
+      </div>
+      <div className='App-main'>
+        {loading?
+          <Loader />:
+          <UpdateProducts />
+        }
       </div>
     </div>
   );
