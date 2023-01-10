@@ -223,9 +223,9 @@ function App() {
   }
   
 
-  useEffect(() => {
-    cleanData("all");
-  }, [type, searchtype]);
+  // useEffect(() => {
+  //   cleanData("all");
+  // }, [type, searchtype]);
 
   useEffect(() => {
     handleSearch(prdName, page, type, searchtype);
