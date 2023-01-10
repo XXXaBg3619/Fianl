@@ -26,7 +26,7 @@ const Post = async (loc, platform) => {
 };
 
 const Get = async (loc, prdName, page, searchType) => {
-    // console.log(`Get: ${loc}, ${prdName}, ${page}, ${searchType}`)
+    console.log(`Get: ${loc}, ${prdName}, ${page}, ${searchType}`)
     try {
       const query = `prdName=${prdName}&page=${page}&searchType=${searchType}`;
       const { data: { msg } } = await instance.get(`${loc}?${query}`);
@@ -45,7 +45,7 @@ const Get = async (loc, prdName, page, searchType) => {
 };
 
 const Gets = async (loc, prdName, page, type, searchType) => {
-    // console.log(`Gets: ${loc}, ${prdName}, ${page}, ${type}, ${searchType}`)
+    console.log(`Gets: ${loc}, ${prdName}, ${page}, ${type}, ${searchType}`)
     try {
       const query = `prdName=${prdName}&page=${page}&type=${type}&searchType=${searchType}`;
       const { data: { msg } } = await instance.get(`${loc}?${query}`);
@@ -66,7 +66,7 @@ const Gets = async (loc, prdName, page, type, searchType) => {
 
 
 const search = (prdName, page, type, searchType) => {
-    // console.log(`SEARCH: ${prdName}, ${page}, ${type}, ${searchType}`)
+    console.log(`SEARCH: ${prdName}, ${page}, ${type}, ${searchType}`)
     try {
         if (type.length === 1)
             return Get(`/${type[0]}`, prdName, page, SearchType[searchType]);

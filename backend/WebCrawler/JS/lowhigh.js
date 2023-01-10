@@ -6,7 +6,7 @@ import SHOPEE from './shopee';
 const LOWHIGH = async (name, page, type, searchType, callback) => {
     const count = type.length;
     let pageFix = Math.floor((parseInt(page)-1) / count) + 1;
-    // console.log(`LOWHIGH: ${name}, ${pageFix}, , ${type}, ${searchType}`)
+    console.log(`LOWHIGH: ${name}, ${pageFix}, , ${type}, ${searchType}`)
     let prdsList = [];
     try {
         if (type.includes('momo')) 

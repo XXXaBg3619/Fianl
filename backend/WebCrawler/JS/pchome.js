@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
 
 async function PCHOME(name, page, searchType, callback) {
-    // console.log(`PCHOME: ${name}, ${page}, ${searchType}`)
+    console.log(`PCHOME: ${name}, ${page}, ${searchType}`)
     const pythonProcess = spawn('python', ['./WebCrawler/PY/pchome.py', name, page, searchType]);
     for await (const data of pythonProcess.stdout) {
         let productList;

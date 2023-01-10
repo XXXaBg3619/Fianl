@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
 
 async function MOMO(name, page, searchType, callback) {
-    // console.log(`MOMO: ${name}, ${page}, ${searchType}`)
+    console.log(`MOMO: ${name}, ${page}, ${searchType}`)
     const pythonProcess = spawn('python', ['./WebCrawler/PY/momo.py', name, page, searchType]);
     for await (const data of pythonProcess.stdout) {
         let productList;

@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 
 
 async function SHOPEE_5(name, page, searchType, callback) {
-    // console.log(`SHOPEE: ${name}, ${page}, ${searchType}`)
+    console.log(`SHOPEE: ${name}, ${page}, ${searchType}`)
     const Page = parseInt(page);
     const pythonProcess = spawn('python', ['./WebCrawler/PY/shopee.py', name, page, searchType]);
     for await (const data of pythonProcess.stdout) {
