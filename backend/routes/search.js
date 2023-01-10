@@ -82,9 +82,9 @@ router.get("/high-low", (req, res) => {
 
 router.post("/clean", async(req, res) => {
     let { platform } = req.query;
-    // console.log(`POST clean: ${platform}`)
+    console.log(`POST clean: ${platform}`)
     try {
-        const pythonProcess = spawn('python', ['./WebCrawler/clean.py', platform]);
+        const pythonProcess = spawn('python', ['./WebCrawler/PY/clean.py', platform]);
         for await (const data of pythonProcess.stdout) {
             res.status(200).send({ msg: data })
         };
